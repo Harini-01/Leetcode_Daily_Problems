@@ -1,0 +1,135 @@
+You are given an array of integers nums. Return the length of the longest 
+subarray of nums which is either strictly increasing or strictly decreasing.
+
+Example 1:
+Input: nums = [1,4,3,3,2]
+Output: 2
+Explanation:
+The strictly increasing subarrays of nums are [1], [2], [3], [3], [4], and [1,4].
+The strictly decreasing subarrays of nums are [1], [2], [3], [3], [4], [3,2], and [4,3].
+Hence, we return 2.
+
+Example 2:
+Input: nums = [3,3,3,3]
+Output: 1
+Explanation:
+The strictly increasing subarrays of nums are [3], [3], [3], and [3].
+The strictly decreasing subarrays of nums are [3], [3], [3], and [3].
+Hence, we return 1.
+
+Example 3:
+Input: nums = [3,2,1]
+Output: 3
+Explanation:
+The strictly increasing subarrays of nums are [3], [2], and [1].
+The strictly decreasing subarrays of nums are [3], [2], [1], [3,2], [2,1], and [3,2,1].
+Hence, we return 3.
+
+Constraints:
+1 <= nums.length <= 50
+1 <= nums[i] <= 50
+
+My solution:
+class Solution {
+public:
+    int longestMonotonicSubarray(vector<int>& nums) {
+        int n = nums.size();
+        int maxcnt = 0;
+
+        int max_inc_subarray = 0;
+        int max_dec_subarray = 0;
+        int cnt = 1;
+
+        //Increasing subarray
+        for(int i = 0;i < n - 1;i++)
+        {
+            if(nums[i] < nums[i+1])
+            {
+                cnt++;
+                cout<<cnt<<" ";
+            }
+            else
+            {
+                max_inc_subarray = max(max_inc_subarray, cnt);
+                cnt = 1;
+                cout<<"\n"<<max_inc_subarray;
+                cout<<"\n"<<cnt;
+            }
+        }
+        max_inc_subarray = max(max_inc_subarray, cnt);
+
+        cout<<"Max inc subarray size "<<max_inc_subarray<<"\n";
+
+
+        cnt = 1;
+
+
+        //Decreasing subarray
+        for(int i = 0;i < n - 1;i++)
+        {
+            if(nums[i] > nums[i+1])
+            {
+                cnt++;
+                cout<<cnt<<" ";
+            }
+            else
+            {
+                max_dec_subarray = max(max_dec_subarray, cnt);
+                cnt = 1;
+                cout<<"\n"<<cnt;
+                cout<<"\n"<<max_dec_subarray;
+            }
+        }
+        max_dec_subarray = max(max_dec_subarray, cnt);
+
+        cout<<"Max dec subarray size "<<max_dec_subarray<<"\n";
+
+        maxcnt = max(max_inc_subarray, max_dec_subarray);
+        return maxcnt;
+    }
+};
+
+S.C: O(1)
+T.C: O(N)
+
+Properly restructured code:
+class Solution {
+public:
+    int longestMonotonicSubarray(vector<int>& nums) {
+        int inclength = 1;
+        int declength = 1;
+        int maxlength = 0;
+
+        int n = nums.size();
+
+        for(int i = 0; i < n-1; i++)
+        {
+            if( nums[i] < nums[i+1])
+            {
+                inclength++;
+                maxlength = max(maxlength , declength);
+                declength = 1;
+
+            }
+            else if(nums[i] > nums[i+1])
+            {
+                declength++;
+                maxlength = max(maxlength , inclength);
+                inclength = 1;
+            }
+            else
+            {   
+                maxlength = max(maxlength, max(inclength, declength));
+                inclength = 1;
+                declength = 1;
+            }
+        }
+
+        maxlength = max(maxlength, max(inclength, declength));
+
+        return maxlength;
+    }
+};
+
+T.C: O(N)
+S.C: O(1)
